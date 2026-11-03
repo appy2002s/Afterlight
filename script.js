@@ -34,6 +34,7 @@ const canvas=document.querySelector("#game-canvas"),ctx=canvas.getContext("2d");
 const hint=document.querySelector("#canvas-hint"),knob=document.querySelector("#stick-knob"),pad=document.querySelector("#touch-pad");
 const player={x:355,y:270,speed:2.5,face:1};let target=null,keys={},stick={x:0,y:0},pointerDown=false,gameStarted=false,doorOpen=false,dayMinutes=480,lastTick=0;
 const door={x:500,y:330};
+const sign={x:605,y:420};
 function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h));}
 function text(t,x,y,c="#f1efd9",size=12){ctx.fillStyle=c;ctx.font="bold "+size+"px monospace";ctx.fillText(t,x,y);}
 function drawScene(){
@@ -48,6 +49,9 @@ function drawScene(){
  rect(470,370,62,145,"#a99a75");for(let y=378;y<505;y+=22){rect(475,y,52,3,"#c3b38b");}
  // Small shrubs and flowers.
  for(const [x,y] of [[75,95],[125,430],[720,100],[790,390],[635,465],[250,490],[845,250]]){rect(x,y,24,17,"#315b39");rect(x+5,y-6,16,13,"#3c6c40");rect(x+9,y+5,4,4,"#9aaf69");}
+ // A little message sign beside the yard path.
+ rect(sign.x+8,sign.y+27,7,42,"#68472f");rect(sign.x+4,sign.y+65,15,5,"#503b2b");
+ rect(sign.x-9,sign.y,43,31,"#68472f");rect(sign.x-6,sign.y+3,37,25,"#c69b60");rect(sign.x-3,sign.y+6,31,19,"#e0c58c");text("♥",sign.x+2,sign.y+21,"#a64d45",12);
  // House floor and walls.
  rect(180,100,380,280,"#8d7655");rect(192,112,356,256,"#c5b38b");
  // Floorboard pixel lines.
@@ -77,8 +81,10 @@ function drawScene(){
  rect(player.x-9,player.y-2,18,6,"#263d5a");rect(player.x-7,player.y+5,5,9,"#302c2a");rect(player.x+2,player.y+5,5,9,"#302c2a");
  // Small world labels.
  text("HOME",205,128,"#756447",10);text("YARD",590,135,"#d5e0b9",10);text("ROAD",25,535,"#e1ddc2",10);
- // Door interaction marker.
+ // Door and sign interaction markers.
  const nearDoor=Math.hypot(player.x-door.x,player.y-door.y)<78;
+ const nearSign=Math.hypot(player.x-sign.x,player.y-sign.y)<82;
+ if(nearSign){rect(sign.x-20,sign.y-31,78,19,"#17251ee8");text("READ SIGN",sign.x-14,sign.y-18,"#d5ef9c",10);}
  if(nearDoor){rect(door.x-45,door.y-58,90,22,"#17251ee8");text(doorOpen?"CLOSE DOOR":"OPEN DOOR",door.x-39,door.y-43,"#d5ef9c",10);}
 }
 const playerRadius=9;
@@ -111,12 +117,13 @@ function movePlayer(dx,dy){
  if(dx)player.face=Math.sign(dx);
 }
 function interact(){
+ if(Math.hypot(player.x-sign.x,player.y-sign.y)<88){hint.textContent="Te Amo";return;}
  if(Math.hypot(player.x-door.x,player.y-door.y)<85){doorOpen=!doorOpen;hint.textContent=doorOpen?"Door opened. You're home.":"Door closed.";return;}
- hint.textContent="Get closer to the front door to interact.";
+ hint.textContent="Get closer to the sign or front door to interact.";
 }
 document.querySelector("#interact-button").addEventListener("click",interact);
 function canvasPoint(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*900/r.width,y:(e.clientY-r.top)*620/r.height};}
-canvas.addEventListener("pointerdown",e=>{e.preventDefault();pointerDown=true;canvas.setPointerCapture?.(e.pointerId);const p=canvasPoint(e);if(Math.hypot(p.x-door.x,p.y-door.y)<72&&Math.hypot(player.x-door.x,player.y-door.y)<95){interact();return;}target=p;hint.textContent="Walking to your selected spot…";});
+canvas.addEventListener("pointerdown",e=>{e.preventDefault();pointerDown=true;canvas.setPointerCapture?.(e.pointerId);const p=canvasPoint(e);if((Math.hypot(p.x-door.x,p.y-door.y)<72&&Math.hypot(player.x-door.x,player.y-door.y)<95)||(Math.hypot(p.x-sign.x,p.y-sign.y)<72&&Math.hypot(player.x-sign.x,player.y-sign.y)<95)){interact();return;}target=p;hint.textContent="Walking to your selected spot…";});
 canvas.addEventListener("pointermove",e=>{if(pointerDown){const p=canvasPoint(e);target=p;}});
 canvas.addEventListener("pointerup",()=>{pointerDown=false;});
 canvas.addEventListener("pointercancel",()=>{pointerDown=false;});
