@@ -79,31 +79,33 @@ function drawScene(){
  const nearDoor=Math.hypot(player.x-door.x,player.y-door.y)<78;
  if(nearDoor){rect(door.x-45,door.y-58,90,22,"#17251ee8");text(doorOpen?"CLOSE DOOR":"OPEN DOOR",door.x-39,door.y-43,"#d5ef9c",10);}
 }
-const playerRadius=8;
+const playerRadius=9;
+// Collision rectangles match the visible house walls exactly. The doorway is
+// deliberately left open; the closed door has its own solid hitbox.
 const solidWalls=[
- {x:170,y:90,w:400,h:18},       // top wall
- {x:170,y:90,w:18,h:300},       // left wall
- {x:552,y:90,w:18,h:300},       // right wall
- {x:170,y:372,w:300,h:18},     // bottom-left wall
- {x:532,y:372,w:38,h:18}       // bottom-right wall; doorway is the gap
+ {x:170,y:90,w:400,h:18},
+ {x:170,y:90,w:18,h:300},
+ {x:552,y:90,w:18,h:300},
+ {x:170,y:372,w:300,h:18},
+ {x:532,y:372,w:38,h:18}
 ];
-function circleHitsRect(cx,cy,r,box){
- const nearX=Math.max(box.x,Math.min(cx,box.x+box.w));
- const nearY=Math.max(box.y,Math.min(cy,box.y+box.h));
- return (cx-nearX)**2+(cy-nearY)**2<r*r;
+function overlapsPlayer(x,y,box){
+ return x+playerRadius>box.x && x-playerRadius<box.x+box.w &&
+        y+playerRadius>box.y && y-playerRadius<box.y+box.h;
 }
 function blockedAt(x,y){
- if(x<playerRadius||x>900-playerRadius||y<playerRadius||y>620-playerRadius)return true;
- for(const wall of solidWalls)if(circleHitsRect(x,y,playerRadius,wall))return true;
- // The closed door physically fills the doorway. Opening it clears this obstacle.
- if(!doorOpen&&circleHitsRect(x,y,playerRadius,{x:476,y:331,w:48,h:42}))return true;
+ if(x-playerRadius<0||x+playerRadius>900||y-playerRadius<0||y+playerRadius>620)return true;
+ for(const wall of solidWalls)if(overlapsPlayer(x,y,wall))return true;
+ if(!doorOpen&&overlapsPlayer(x,y,{x:476,y:331,w:48,h:42}))return true;
  return false;
 }
 function movePlayer(dx,dy){
- const len=Math.hypot(dx,dy)||1,stepX=dx/len*player.speed,stepY=dy/len*player.speed;
- // Resolve each axis separately so the player can slide along walls.
- if(!blockedAt(player.x+stepX,player.y))player.x+=stepX;
- if(!blockedAt(player.x,player.y+stepY))player.y+=stepY;
+ const len=Math.hypot(dx,dy)||1;
+ const sx=dx/len*player.speed,sy=dy/len*player.speed;
+ const nextX=player.x+sx,nextY=player.y+sy;
+ // Axis-separated collision lets the survivor slide along a wall.
+ if(!blockedAt(nextX,player.y))player.x=nextX;
+ if(!blockedAt(player.x,nextY))player.y=nextY;
  if(dx)player.face=Math.sign(dx);
 }
 function interact(){
