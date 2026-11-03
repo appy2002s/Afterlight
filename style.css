@@ -32,3 +32,11 @@ body.playing .game-controls{width:min(100%,1200px);margin:12px auto 0;flex-shrin
 body.playing .touch-pad{position:fixed;left:18px;bottom:18px;z-index:1001;margin:0;}
 body.playing .prototype-note{width:min(100%,1200px);margin:8px auto 0;flex-shrink:0;}
 @media(max-width:700px){body.playing .game-panel{padding:10px;}body.playing .game-heading{margin-bottom:8px;}body.playing .canvas-wrap{flex:0 0 auto;width:100%;}body.playing .canvas-wrap canvas{width:100%;height:auto;max-height:calc(100dvh - 205px);}body.playing .game-controls{margin-top:8px;}body.playing .touch-pad{left:10px;bottom:10px;transform:scale(.88);transform-origin:bottom left;}body.playing .prototype-note{font-size:9px;}}
+
+
+/* Large centered message shown when the player reads the yard sign. */
+.message-overlay{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(5,12,8,.78);backdrop-filter:blur(5px);cursor:pointer;}
+.message-card{width:min(90vw,720px);min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;border:2px solid #b6d58b;background:linear-gradient(145deg,#263b2b,#142019);box-shadow:0 0 0 8px #b6d58b18,0 24px 90px #000b;padding:36px 20px;}
+.message-heart{font-size:clamp(28px,6vw,48px);color:#e58b83;text-shadow:0 0 22px #e58b8366;}
+.message-text{font:clamp(42px,10vw,88px) 'Press Start 2P',monospace;line-height:1.35;color:#f0efd9;text-shadow:5px 5px 0 #718c5c,0 0 28px #b6d58b66;}
+.message-dismiss{font:10px 'DM Mono',monospace;letter-spacing:2px;color:#aab99f;margin-top:8px;}
