@@ -24,7 +24,9 @@ function generateWorld(){
 }
 form.addEventListener("submit",event=>{event.preventDefault();generateWorld();});
 document.querySelector("#enter-game-button").addEventListener("click",()=>{
- document.querySelector("#game-panel").hidden=false;document.querySelector("#game-panel").scrollIntoView({behavior:"smooth",block:"start"});startGame();
+ document.querySelector("#game-panel").hidden=false;
+ document.body.classList.add("playing");
+ startGame();
 });
 
 /* First tiny, continuous test map. Coordinates are world coordinates. */
