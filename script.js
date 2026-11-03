@@ -117,11 +117,16 @@ function movePlayer(dx,dy){
  if(dx)player.face=Math.sign(dx);
 }
 function interact(){
- if(Math.hypot(player.x-sign.x,player.y-sign.y)<88){hint.textContent="Te Amo";return;}
+ if(Math.hypot(player.x-sign.x,player.y-sign.y)<88){document.querySelector("#message-overlay").hidden=false;return;}
  if(Math.hypot(player.x-door.x,player.y-door.y)<85){doorOpen=!doorOpen;hint.textContent=doorOpen?"Door opened. You're home.":"Door closed.";return;}
  hint.textContent="Get closer to the sign or front door to interact.";
 }
 document.querySelector("#interact-button").addEventListener("click",interact);
+const messageOverlay=document.querySelector("#message-overlay");
+function closeMessage(){messageOverlay.hidden=true;}
+messageOverlay.addEventListener("click",closeMessage);
+messageOverlay.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "||e.key==="Escape"){e.preventDefault();closeMessage();}});
+window.addEventListener("keydown",e=>{if(e.key==="Escape"&&!messageOverlay.hidden)closeMessage();});
 function canvasPoint(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*900/r.width,y:(e.clientY-r.top)*620/r.height};}
 canvas.addEventListener("pointerdown",e=>{e.preventDefault();pointerDown=true;canvas.setPointerCapture?.(e.pointerId);const p=canvasPoint(e);if((Math.hypot(p.x-door.x,p.y-door.y)<72&&Math.hypot(player.x-door.x,player.y-door.y)<95)||(Math.hypot(p.x-sign.x,p.y-sign.y)<72&&Math.hypot(player.x-sign.x,player.y-sign.y)<95)){interact();return;}target=p;hint.textContent="Walking to your selected spot…";});
 canvas.addEventListener("pointermove",e=>{if(pointerDown){const p=canvasPoint(e);target=p;}});
