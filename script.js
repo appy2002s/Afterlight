@@ -79,7 +79,33 @@ function drawScene(){
  const nearDoor=Math.hypot(player.x-door.x,player.y-door.y)<78;
  if(nearDoor){rect(door.x-45,door.y-58,90,22,"#17251ee8");text(doorOpen?"CLOSE DOOR":"OPEN DOOR",door.x-39,door.y-43,"#d5ef9c",10);}
 }
-function movePlayer(dx,dy){const len=Math.hypot(dx,dy)||1;player.x+=dx/len*player.speed;player.y+=dy/len*player.speed;player.x=Math.max(205,Math.min(860,player.x));player.y=Math.max(125,Math.min(590,player.y));if(dx)player.face=Math.sign(dx);}
+const playerRadius=8;
+const solidWalls=[
+ {x:170,y:90,w:400,h:18},       // top wall
+ {x:170,y:90,w:18,h:300},       // left wall
+ {x:552,y:90,w:18,h:300},       // right wall
+ {x:170,y:372,w:300,h:18},     // bottom-left wall
+ {x:532,y:372,w:38,h:18}       // bottom-right wall; doorway is the gap
+];
+function circleHitsRect(cx,cy,r,box){
+ const nearX=Math.max(box.x,Math.min(cx,box.x+box.w));
+ const nearY=Math.max(box.y,Math.min(cy,box.y+box.h));
+ return (cx-nearX)**2+(cy-nearY)**2<r*r;
+}
+function blockedAt(x,y){
+ if(x<playerRadius||x>900-playerRadius||y<playerRadius||y>620-playerRadius)return true;
+ for(const wall of solidWalls)if(circleHitsRect(x,y,playerRadius,wall))return true;
+ // The closed door physically fills the doorway. Opening it clears this obstacle.
+ if(!doorOpen&&circleHitsRect(x,y,playerRadius,{x:476,y:331,w:48,h:42}))return true;
+ return false;
+}
+function movePlayer(dx,dy){
+ const len=Math.hypot(dx,dy)||1,stepX=dx/len*player.speed,stepY=dy/len*player.speed;
+ // Resolve each axis separately so the player can slide along walls.
+ if(!blockedAt(player.x+stepX,player.y))player.x+=stepX;
+ if(!blockedAt(player.x,player.y+stepY))player.y+=stepY;
+ if(dx)player.face=Math.sign(dx);
+}
 function interact(){
  if(Math.hypot(player.x-door.x,player.y-door.y)<85){doorOpen=!doorOpen;hint.textContent=doorOpen?"Door opened. You're home.":"Door closed.";return;}
  hint.textContent="Get closer to the front door to interact.";
