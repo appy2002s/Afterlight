@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#101915"><meta name="description" content="Afterlight — a pixel-art survival world waiting to be discovered.">
 <title>Afterlight — Survive. Build. Discover.</title><link rel="stylesheet" href="style.css"><script src="script.js" defer></script>
 </head><body><main class="shell">
-<div class="topline"><span class="status-dot"></span> OFFLINE WORLD GENERATOR <span class="version">PRE-ALPHA 0.1</span></div>
+<div class="topline"><span class="status-dot"></span> OFFLINE WORLD GENERATOR <span class="version">PRE-ALPHA 0.2</span></div>
 <section class="title-block"><div class="sunrise-mark" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
 <p class="eyebrow">THE WORLD ENDED. YOUR STORY DIDN'T.</p><h1>AFTER<span>LIGHT</span></h1><p class="subtitle">A world to survive. A home to build. A cure to find.</p></section>
 <section class="setup-panel"><div class="panel-heading"><div><p class="eyebrow">NEW SURVIVOR</p><h2>Begin your journey</h2></div><span class="pixel-icon" aria-hidden="true">✚</span></div>
@@ -16,5 +16,14 @@
 </div></fieldset><button class="generate-button" type="submit"><span>GENERATE WORLD</span><span aria-hidden="true">➜</span></button><p class="form-note">Every world is different. Your adventure is yours to shape.</p></form></section>
 <section id="world-result" class="world-result" aria-live="polite" hidden><div class="result-top"><span class="eyebrow">WORLD GENERATED</span><span class="world-seed" id="world-seed"></span></div>
 <h2 id="world-title">A new beginning</h2><p id="world-description"></p><div class="result-details"><span id="result-player"></span><span id="result-difficulty"></span></div>
-<p class="coming-soon">YOUR WORLD IS READY<br><small>Exploration and survival gameplay are coming next.</small></p><button id="regenerate-button" class="secondary-button" type="button">GENERATE ANOTHER WORLD</button></section>
+<button id="enter-game-button" class="generate-button" type="button><span>ENTER TEST AREA</span><span aria-hidden="true">➜</span></button>
+</section>
+<section id="game-panel" class="game-panel" hidden>
+<div class="game-heading"><div><p class="eyebrow">AFTERLIGHT · PLAYABLE PROTOTYPE</p><h2>Your first shelter</h2></div><span class="game-time" id="game-time">DAY 1 · 08:00</span></div>
+<div class="canvas-wrap"><canvas id="game-canvas" width="900" height="620" aria-label="Top-down pixel art game area"></canvas>
+<div class="canvas-hint" id="canvas-hint">Move with the left stick or tap where you want to go.</div></div>
+<div class="game-controls"><div class="control-copy"><strong>HOW TO PLAY</strong><span>Move: touch joystick / tap destination / PS4 cursor</span><span>Interact: tap or click the wooden door when nearby</span></div><button id="interact-button" class="interact-button" type="button">INTERACT</button></div>
+<div class="touch-pad" id="touch-pad" aria-label="Movement joystick"><div class="stick-base"><div class="stick-knob" id="stick-knob"></div></div><span>MOVE</span></div>
+<p class="prototype-note">Prototype map: one tiny house, a patch of grass, and a road. More of the world comes later.</p>
+</section>
 <footer><span>AFTERLIGHT</span><span>SCAVENGE · BUILD · SURVIVE</span></footer></main></body></html>
